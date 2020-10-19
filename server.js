@@ -20,6 +20,7 @@ function start() {
             "View All Employees",
             "View All Departments",
             "Add Employee",
+            "Remove An Employee",
             "Add Department",
             "Add Role",
             "Update Employee Role",
@@ -30,23 +31,27 @@ function start() {
         console.log(answers.choice);
         switch (answers.choice) {
             case "View All Employees":
-                viewAllEmployees()
+                viewAllEmployees();
                 break;
         
             case "View All Departments":
-                viewAllDepartments()
+                viewAllDepartments();
                 break;
             
             case "Add Employee":
-                addNewEmployee()
+                addNewEmployee();
+                break;
+
+            case "Remove An Employee":
+                removeEmployee();
                 break;
             
             case "Add Department":
-                addNewDepartment()
+                addNewDepartment();
                 break;
 
             case "Add Role":
-                addNewRole()
+                addNewRole();
                 break;
 
             case "Update Employee Role":
@@ -54,6 +59,7 @@ function start() {
                 break;
 
             default:
+                console.log("Goodbye!");
                 connection.end()
                 break;
         };
@@ -79,7 +85,8 @@ function viewAllDepartments() {
 };
 
 function addNewEmployee() {
-    inquirer.prompt([{
+    inquirer.prompt([
+        {
             type: "input",
             name: "firstName",
             message: "What is the employees first name?"
@@ -104,6 +111,23 @@ function addNewEmployee() {
             if (err) throw err;
 
             console.table(".....Employee added successfully!.....");
+            start();
+        });
+    });
+};
+
+function removeEmployee() {    
+    inquirer.prompt([
+        {
+            message: "Which employee would you like to remove? (Use first name only for now)",
+            type: "input",
+            name: "name"
+        }
+    ]).then(function(response) {
+        connection.query("DELETE FROM employee WHERE first_name = ?", [response.name], function (err, data) {
+            if (err) throw err;
+
+            console.log("..... Employee REMOVED successfully!.....")
             start();
         });
     });
