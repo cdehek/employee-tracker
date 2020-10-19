@@ -19,9 +19,11 @@ function start() {
         choices: [
             "View All Employees",
             "View All Departments",
+            "View All Roles",
             "Add Employee",
             "Remove An Employee",
             "Add Department",
+            "Remove a Department",
             "Add Role",
             "Update Employee Role",
             "QUIT"
@@ -38,6 +40,10 @@ function start() {
                 viewAllDepartments();
                 break;
             
+            case "View All Roles":
+                viewAllRoles();
+                break;
+            
             case "Add Employee":
                 addNewEmployee();
                 break;
@@ -48,6 +54,10 @@ function start() {
             
             case "Add Department":
                 addNewDepartment();
+                break;
+
+            case "Remove a Department":
+                removeDepartment();
                 break;
 
             case "Add Role":
@@ -77,6 +87,15 @@ function viewAllEmployees() {
 
 function viewAllDepartments() {
     connection.query("SELECT * FROM department", function (err, data) {
+        if (err) throw err;
+
+        console.table(data);
+        start();
+    });
+};
+
+function viewAllRoles() {
+    connection.query("SELECT * FROM role", function (err, data) {
         if (err) throw err;
 
         console.table(data);
@@ -144,6 +163,23 @@ function addNewDepartment() {
             if (err) throw err;
 
             console.log(".....Department added successfully!.....");
+            start();
+        });
+    });
+};
+
+function removeDepartment() {    
+    inquirer.prompt([
+        {
+            message: "Please enter the name of the department you would like to delete:",
+            type: "input",
+            name: "name"
+        }
+    ]).then(function(response) {
+        connection.query("DELETE FROM department WHERE name = ?", [response.name], function (err, data) {
+            if (err) throw err;
+
+            console.log("..... Department REMOVED successfully!.....")
             start();
         });
     });
