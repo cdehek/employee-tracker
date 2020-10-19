@@ -25,6 +25,7 @@ function start() {
             "Add Department",
             "Remove a Department",
             "Add Role",
+            "Remove Role",
             "Update Employee Role",
             "QUIT"
         ],
@@ -62,6 +63,10 @@ function start() {
 
             case "Add Role":
                 addNewRole();
+                break;
+
+            case "Remove Role":
+                removeRole();
                 break;
 
             case "Update Employee Role":
@@ -207,6 +212,23 @@ function addNewRole() {
             if (err) throw err;
 
             console.log(".....Role added successfully!.....")
+            start();
+        });
+    });
+};
+
+function removeRole() {    
+    inquirer.prompt([
+        {
+            message: "Please enter the role you would like delete:",
+            type: "input",
+            name: "name"
+        }
+    ]).then(function(response) {
+        connection.query("DELETE FROM role WHERE title = ?", [response.name], function (err, data) {
+            if (err) throw err;
+
+            console.log("..... Role has been REMOVED successfully!.....")
             start();
         });
     });
